@@ -4,6 +4,30 @@
     --danger-color: #ef4444;
     --background-color: #f8fafc;
     --card-background: #ffffff;
+    
+    /* Light mode variables */
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --border-color: #e5e7eb;
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: #f3f4f6;
+}
+
+/* Dark mode variables */
+html.dark-mode {
+    --primary-color: #3b82f6;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --border-color: #404040;
+    --sidebar-bg: #2d2d2d;
+    --sidebar-hover: #3d3d3d;
+    --card-background: var(--bg-secondary);
 }
 
 * {
@@ -14,9 +38,12 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background-color);
-    color: #1f2937;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
 }
 
 .container {
@@ -182,4 +209,269 @@ input:focus, select:focus {
 
 .fade-in {
     animation: fadeIn 0.3s ease-out;
+}
+
+/* Add Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+}
+
+.sidebar-header h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.sidebar-nav {
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-item i {
+    margin-right: 0.75rem;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: var(--sidebar-hover);
+    color: var(--primary-color);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Theme Toggle Switch */
+.theme-toggle, .currency-selector {
+    margin-bottom: 1rem;
+}
+
+.theme-label, .currency-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* Update existing components for dark mode */
+.card, 
+.transaction-form, 
+.chart-container, 
+.transaction-list {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+input, select, #currencySelect {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.transaction-item:hover {
+    background-color: var(--sidebar-hover);
+}
+
+/* Add these styles for the hamburger menu and mobile responsiveness */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1000;
+    background: var(--primary-color);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger {
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: white;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: white;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before {
+    top: -6px;
+}
+
+.hamburger::after {
+    bottom: -6px;
+}
+
+/* Hamburger animation */
+.menu-open .hamburger {
+    background: transparent;
+}
+
+.menu-open .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-open .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-mobile-closed {
+        transform: translateX(-100%);
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* Adjust container padding for mobile */
+    .container {
+        padding: 1rem;
+        margin-top: 4rem;
+    }
+
+    /* Adjust dashboard layout for mobile */
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust filters for mobile */
+    .filters {
+        flex-direction: column;
+    }
+
+    /* Adjust charts for mobile */
+    .charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Add overlay for mobile when sidebar is open */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    display: block;
 } 

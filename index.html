@@ -1,92 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Dashboard Section -->
-        <section class="dashboard animate__animated animate__fadeIn">
-            <div class="card balance">
-                <h2>Current Balance</h2>
-                <p id="totalBalance">$0.00</p>
-            </div>
-            <div class="card income">
-                <h2>Total Income</h2>
-                <p id="totalIncome">$0.00</p>
-            </div>
-            <div class="card expense">
-                <h2>Total Expenses</h2>
-                <p id="totalExpense">$0.00</p>
-            </div>
-        </section>
+    <!-- Add this button right after the body tag opens -->
+    <button id="sidebarToggle" class="sidebar-toggle">
+        <span class="hamburger"></span>
+    </button>
 
-        <!-- Transaction Form -->
-        <section class="transaction-form">
-            <h2>Add Transaction</h2>
-            <form id="transactionForm">
-                <div class="form-group">
-                    <input type="number" id="amount" placeholder="Amount" required>
-                </div>
-                <div class="form-group">
-                    <select id="type" required>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <select id="category" required>
-                        <option value="">Select Category</option>
-                        <option value="salary">Salary</option>
-                        <option value="food">Food</option>
-                        <option value="transport">Transport</option>
-                        <option value="utilities">Utilities</option>
-                        <option value="entertainment">Entertainment</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <input type="date" id="date" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="description" placeholder="Description" required>
-                </div>
-                <button type="submit" class="btn">Add Transaction</button>
-            </form>
-        </section>
-
-        <!-- Filters Section -->
-        <section class="filters">
-            <input type="text" id="searchTransaction" placeholder="Search transactions...">
-            <select id="categoryFilter">
-                <option value="all">All Categories</option>
-                <option value="salary">Salary</option>
-                <option value="food">Food</option>
-                <option value="transport">Transport</option>
-                <option value="utilities">Utilities</option>
-                <option value="entertainment">Entertainment</option>
-            </select>
-        </section>
-
-        <!-- Charts Section -->
-        <section class="charts">
-            <div class="chart-container">
-                <canvas id="expenseChart"></canvas>
+    <!-- Add class "sidebar-mobile-closed" to the sidebar div -->
+    <div class="sidebar sidebar-mobile-closed">
+        <div class="sidebar-header">
+            <h2>💰 ExpenseTracker</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                Analytics
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-history"></i>
+                History
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="theme-toggle">
+                <span class="theme-label">Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                </label>
             </div>
-            <div class="chart-container">
-                <canvas id="trendChart"></canvas>
+            <div class="currency-selector">
+                <span class="currency-label">Currency</span>
+                <select id="currencySelect">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                </select>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- Transaction List -->
-        <section class="transaction-list">
-            <h2>Recent Transactions</h2>
-            <div id="transactionTable"></div>
-        </section>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section class="dashboard animate__animated animate__fadeIn">
+                <div class="card balance">
+                    <h2>Current Balance</h2>
+                    <p id="totalBalance">$0.00</p>
+                </div>
+                <div class="card income">
+                    <h2>Total Income</h2>
+                    <p id="totalIncome">$0.00</p>
+                </div>
+                <div class="card expense">
+                    <h2>Total Expenses</h2>
+                    <p id="totalExpense">$0.00</p>
+                </div>
+            </section>
+
+            <!-- Transaction Form -->
+            <section class="transaction-form">
+                <h2>Add Transaction</h2>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <input type="number" id="amount" placeholder="Amount" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="type" required>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="category" required>
+                            <option value="">Select Category</option>
+                            <option value="salary">Salary</option>
+                            <option value="food">Food</option>
+                            <option value="transport">Transport</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="entertainment">Entertainment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="description" placeholder="Description" required>
+                    </div>
+                    <button type="submit" class="btn">Add Transaction</button>
+                </form>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="filters">
+                <input type="text" id="searchTransaction" placeholder="Search transactions...">
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="salary">Salary</option>
+                    <option value="food">Food</option>
+                    <option value="transport">Transport</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="entertainment">Entertainment</option>
+                </select>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts">
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Transaction List -->
+            <section class="transaction-list">
+                <h2>Recent Transactions</h2>
+                <div id="transactionTable"></div>
+            </section>
+        </div>
     </div>
 
     <script src="app.js"></script>

@@ -99,10 +99,18 @@ class ExpenseTracker {
         this.expenseChart = null;
         this.trendChart = null;
 
+        // Initialize theme and currency
+        this.initializeTheme();
+        this.initializeCurrency();
+        
+        // Initialize event listeners and UI
         this.initializeEventListeners();
         this.updateDashboard();
         this.renderTransactions();
         this.initializeCharts();
+        
+        // Initialize sidebar toggle
+        this.initializeSidebarToggle();
     }
 
     initializeEventListeners() {
@@ -144,9 +152,9 @@ class ExpenseTracker {
 
         const balance = income - expenses;
 
-        document.getElementById('totalBalance').textContent = `$${balance.toFixed(2)}`;
-        document.getElementById('totalIncome').textContent = `$${income.toFixed(2)}`;
-        document.getElementById('totalExpense').textContent = `$${expenses.toFixed(2)}`;
+        document.getElementById('totalBalance').textContent = this.formatCurrency(balance);
+        document.getElementById('totalIncome').textContent = this.formatCurrency(income);
+        document.getElementById('totalExpense').textContent = this.formatCurrency(expenses);
     }
 
     renderTransactions() {
@@ -161,7 +169,7 @@ class ExpenseTracker {
                 </div>
                 <div class="transaction-amount">
                     <span style="color: ${t.type === 'income' ? 'var(--success-color)' : 'var(--danger-color)'}">
-                        ${t.type === 'income' ? '+' : '-'}$${t.amount.toFixed(2)}
+                        ${t.type === 'income' ? '+' : '-'}${this.formatCurrency(t.amount)}
                     </span>
                     <div class="actions">
                         <button class="edit-btn" onclick="expenseTracker.editTransaction(${t.id})">Edit</button>
@@ -308,6 +316,94 @@ class ExpenseTracker {
 
     filterTransactions() {
         this.renderTransactions();
+    }
+
+    initializeTheme() {
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme');
+        
+        // Set initial theme
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // Theme toggle listener
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+            // Update charts for theme change
+            this.updateCharts();
+        });
+    }
+
+    initializeCurrency() {
+        this.currency = localStorage.getItem('currency') || 'USD';
+        this.currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'JPY': '¥'
+        };
+
+        const currencySelect = document.getElementById('currencySelect');
+        currencySelect.value = this.currency;
+        
+        currencySelect.addEventListener('change', (e) => {
+            this.currency = e.target.value;
+            localStorage.setItem('currency', this.currency);
+            this.updateDashboard();
+            this.renderTransactions();
+        });
+    }
+
+    formatCurrency(amount) {
+        return `${this.currencySymbols[this.currency]}${amount.toFixed(2)}`;
+    }
+
+    initializeSidebarToggle() {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        // Create overlay element
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        
+        // Toggle sidebar
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-mobile-closed');
+            sidebarToggle.classList.toggle('menu-open');
+            overlay.classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking overlay
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('sidebar-mobile-closed');
+            sidebarToggle.classList.remove('menu-open');
+            overlay.classList.remove('active');
+        });
+        
+        // Close sidebar when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('sidebar-mobile-closed');
+                sidebarToggle.classList.remove('menu-open');
+                overlay.classList.remove('active');
+            } else {
+                sidebar.classList.add('sidebar-mobile-closed');
+            }
+        });
+        
+        // Initial state for mobile
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add('sidebar-mobile-closed');
+        }
     }
 }
 
